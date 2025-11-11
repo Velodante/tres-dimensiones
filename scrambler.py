@@ -2,8 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class Cubo:
-    def __init__(self, tamanio=3):
-        self.tamanio = tamanio
+    def __init__(self, tamanio=3, 
         colores = {
             'U': 'W',  # Blanco
             'D': 'Y',  # Amarillo
@@ -11,7 +10,8 @@ class Cubo:
             'R': 'R',  # Rojo
             'F': 'G',  # Verde
             'B': 'B'   # Azul
-        }
+        }):
+        self.tamanio = tamanio
         self.disposicion = {
             c: [[colores[c] for _ in range(tamanio)] for _ in range(tamanio)]
             for c in colores
@@ -202,8 +202,6 @@ class Cubo:
             elif sentido == 2:
                 self._rotar_cara(cara, 1)
                 self._rotar_cara(cara, 1)
-
-
 
 if __name__ == "__main__":
     c = Cubo(3)
