@@ -27,3 +27,8 @@ six==1.17.0
 tzdata==2025.2
 urllib3==1.26.20
 wheel==0.44.0
+pygame==2.6.1
+cffi==2.0.0
+future==1.0.0
+kociemba==1.2.1
+pycparser==2.23
