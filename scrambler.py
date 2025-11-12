@@ -248,7 +248,7 @@ def logistic_map_iterate(x, r):
     """Aplica una iteración del mapa logístico."""
     return r * x * (1.0 - x)
 
-def generar_scramble_caotico_6ejes_adyacente(generador_lcg, longitud=20, r=3.99):
+def generar_scramble_caotico_6ejes_adyacente(generador_lcg, longitud=20, r=3.99, eje_previo=None):
     
     ejes = ["R", "U", "F", "D", "B", "L"]
     modificadores = ["", "'", "2"]
@@ -265,7 +265,7 @@ def generar_scramble_caotico_6ejes_adyacente(generador_lcg, longitud=20, r=3.99)
     for eje in ejes:
         estados_caoticos[eje] = 0.1 + (generador_lcg.get_random_float() * 0.8)
     
-    ultimo_eje_movido = None
+    ultimo_eje_movido = eje_previo
     scramble = []
 
     for i in range(longitud):
