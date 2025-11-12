@@ -57,12 +57,13 @@ class Agente_Resolvedor:
             return errores
 
         
-    def proximo_estado(self, P_A, G_A, S_G):
+    def proximo_estado(self, P_A, G_A, S_G,S_G_path):
         V = 0
         if P_A <= 0 and G_A < 0:
             V = np.random.randint(1, max(2, np.abs(G_A)))
             self.cubo.disposicion = copy.deepcopy(S_G)
         
+            self.historial_movimientos = copy.deepcopy(S_G_path)
         elif P_A > 0 and G_A <= 0:
             V = np.random.randint(1, max(2, P_A))
         
@@ -100,8 +101,7 @@ class PSO:
         self.FSP = self.FS.copy()
         self.FSG = np.min(self.FSP)  
         self.SG = copy.deepcopy(cubo_inicial.disposicion)
-        self.mejor_secuencia_global = []
-        
+        self.SG_path = []
         # Estadísticas acumuladas
         self.NFE = 0
         self.Average = 0
@@ -130,7 +130,7 @@ class PSO:
                 PA = self.FSP[i] - self.FS[i]
                 GA = self.FSG - self.FS[i]
                 
-                self.FS[i] = agente_actual.proximo_estado(P_A=PA, G_A=GA, S_G=self.SG)
+                self.FS[i] = agente_actual.proximo_estado(P_A=PA, G_A=GA, S_G=self.SG, S_G_path=self.SG_path)
                 self.NFE += 1
                 if self.FS[i] < self.FSP[i]: 
                     self.FSP[i] = self.FS[i]
@@ -141,7 +141,7 @@ class PSO:
                     self.FSG = self.FS[i]
                     
                     # 🔹 Guardar la concatenación de scrambles que mejoraron el global
-                    self.mejor_secuencia_global.extend(agente_actual.mov_previo)
+                    self.SG_path= copy.deepcopy(agente_actual.historial_movimientos)
                     
                     # 🔹 NUEVO: guardar también el historial completo del agente que logró el mejor global
                     self.mejor_agente = copy.deepcopy(agente_actual)
@@ -155,7 +155,7 @@ class PSO:
 
                 if agente_actual.resuelto():
                     if previa_solucion == 0:
-                        self.mejor_secuencia_global.extend(agente_actual.mov_previo)
+                        self.SG_path.extend(agente_actual.mov_previo)
 
                     if self.First == 0:
                         self.First = agente_actual.n_movimientos
@@ -212,12 +212,12 @@ if __name__ == "__main__":
             pso.iterar(max_iters=MAX_ITERS)
 
             # SOLUTION LENGTH (importante guardarlo)
-            longitud_solucion = len(pso.mejor_secuencia_global)
+            longitud_solucion = len(pso.SG_path)
 
             print("============================================================")
             print("🏁 SECUENCIA ÓPTIMA GLOBAL (concatenación de scrambles que mejoraron el global):")
             print("Scramble inicial: ", scramble)
-            print(pso.mejor_secuencia_global)
+            print(pso.SG_path)
             print(f"Total movimientos concatenados: {longitud_solucion}")
             print("============================================================")
 
