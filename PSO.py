@@ -232,8 +232,7 @@ if __name__ == "__main__":
 
             if total > 0:
                 exitos += 1
-
-            # <-- AÑADIR SolutionLen AQUÍ
+                
             datos_longitud.append({
                 "Length": longitud,
                 "%": f"{exitos}/{N_INTENTOS}",
@@ -252,12 +251,12 @@ if __name__ == "__main__":
         sol_lengths = [d["SolutionLen"] for d in datos_longitud if "SolutionLen" in d]
         if sol_lengths:
             minimo_local = int(min(sol_lengths))
-            maximo_local = int(max(sol_lengths))  # opcional, por si te interesa
+            maximo_local = int(max(sol_lengths))  
         else:
             minimo_local = None
             maximo_local = None
 
-        # Agregar promedio de los N_INTENTOS (como hacías)
+        # Agregar promedio de los N_INTENTOS
         promedio = {
             "Length": longitud,
             "%": f"{exitos}/{N_INTENTOS}",
@@ -268,7 +267,6 @@ if __name__ == "__main__":
             "Average": np.nanmean([d["Average"] for d in datos_longitud]),
             "NFE": np.nanmean([d["NFE"] for d in datos_longitud]),
             "Total": np.nanmean([d["Total"] for d in datos_longitud]),
-            # opcional: sumar el minimo_local para debug posterior
             "MinSolutionLen": minimo_local,
             "MaxSolutionLen": maximo_local
         }

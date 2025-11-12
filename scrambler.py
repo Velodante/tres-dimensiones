@@ -145,14 +145,14 @@ class Cubo:
             left = [r[0] for r in D['L']]
             right = [r[-1] for r in D['R']]
 
-            if sentido == 1:  # B horario - CORREGIDO
+            if sentido == 1:  # B horario 
                 for i in range(n):
                     D['U'][0][i] = right[i]
                     D['R'][i][-1] = bottom[n - 1 - i]
                     D['D'][-1][i] = left[i]
                     D['L'][i][0] = top[n - 1 - i]
 
-            elif sentido == -1:  # B antihorario - CORREGIDO
+            elif sentido == -1:  # B antihorario
                 for i in range(n):
                     D['U'][0][i] = left[n - 1 - i]
                     D['R'][i][-1] = top[i]
@@ -200,8 +200,7 @@ class Cubo:
 
 
 # -------------------------------------------------------------------
-# PARTE 1: El "Motor" (Generador Congruencial Lineal - LCG)
-# (Esta parte es idéntica)
+# Implementaciones para mezclas aleatorias
 # -------------------------------------------------------------------
 class LCG:
     def __init__(self, seed):
@@ -219,8 +218,7 @@ class LCG:
         return self.next_int() / self.m
 
 # -------------------------------------------------------------------
-# PARTE 2: Funciones "Puente" (Usan nuestro LCG)
-# (Esta parte es idéntica)
+#  Funciones para seleccionar pesos y opciones
 # -------------------------------------------------------------------
 
 def nuestro_choice_con_pesos(generador_lcg, opciones, pesos):
@@ -240,8 +238,7 @@ def choicer(generador_lcg, opciones):
     return opciones[idx]
 
 # -------------------------------------------------------------------
-# PARTE 3: El "Sistema" (Cadena de Markov Caótica de 3 ejes)
-# (Aquí están los cambios)
+# generar_scramble_caotico_6ejes_adyacente (pedazo de nombre)
 # -------------------------------------------------------------------
 
 def logistic_map_iterate(x, r):
@@ -253,7 +250,7 @@ def generar_scramble_caotico_6ejes_adyacente(generador_lcg, longitud=20, r=3.99,
     ejes = ["R", "U", "F", "D", "B", "L"]
     modificadores = ["", "'", "2"]
     
-    # --- CAMBIO 1: Definimos los ejes opuestos ---
+    # Definimos los ejes opuestos ---
     opuestos = {
         "R": "L", "L": "R",
         "U": "D", "D": "U",
@@ -270,7 +267,7 @@ def generar_scramble_caotico_6ejes_adyacente(generador_lcg, longitud=20, r=3.99,
 
     for i in range(longitud):
         
-        # --- CAMBIO 2: Lógica de filtrado de ejes ---
+        # ---  Lógica de filtrado de ejes ---
         
         # 1. Determinar qué ejes NO se pueden mover
         eje_opuesto_a_excluir = None
