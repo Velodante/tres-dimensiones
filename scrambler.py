@@ -248,47 +248,58 @@ def logistic_map_iterate(x, r):
     """Aplica una iteración del mapa logístico."""
     return r * x * (1.0 - x)
 
-def generar_scramble_caotico_3ejes(generador_lcg, longitud=20, r=3.99):
-    """
-    Generador de Scramble Caótico usando solo R, U, F.
-    """
+def generar_scramble_caotico_6ejes_adyacente(generador_lcg, longitud=20, r=3.99):
     
-    # --- CAMBIO 1 ---
-    ejes = ["R", "U", "F"]
+    ejes = ["R", "U", "F", "D", "B", "L"]
     modificadores = ["", "'", "2"]
     
-    # El sistema caótico ahora solo necesita 3 estados iniciales.
+    # --- CAMBIO 1: Definimos los ejes opuestos ---
+    opuestos = {
+        "R": "L", "L": "R",
+        "U": "D", "D": "U",
+        "F": "B", "B": "F"
+    }
+    
     # El LCG se usa para inicializarlos de forma determinista.
     estados_caoticos = {}
     for eje in ejes:
         estados_caoticos[eje] = 0.1 + (generador_lcg.get_random_float() * 0.8)
-    
-    #print(f"--- Generador Caótico 3-Ejes con r={r} ---")
-    #print("Estados caóticos iniciales (x_0):")
-    #for e, x in estados_caoticos.items():
-    #    print(f"  {e}: {x:.4f}")
     
     ultimo_eje_movido = None
     scramble = []
 
     for i in range(longitud):
         
-        # 1. Obtener ejes y pesos posibles
-        #    (Ahora la lista será de 2 ejes)
-        ejes_posibles = [eje for eje in ejes if eje != ultimo_eje_movido]
+        # --- CAMBIO 2: Lógica de filtrado de ejes ---
+        
+        # 1. Determinar qué ejes NO se pueden mover
+        eje_opuesto_a_excluir = None
+        if ultimo_eje_movido is not None:
+            eje_opuesto_a_excluir = opuestos[ultimo_eje_movido]
+        
+        # 2. Obtener ejes y pesos posibles
+        #    (Filtramos el último eje Y su opuesto)
+        ejes_posibles = [
+            eje for eje in ejes 
+            if eje != ultimo_eje_movido and eje != eje_opuesto_a_excluir
+        ]
+        
+        # En el primer movimiento, los 6 ejes son posibles.
+        # En los siguientes, solo 4 ejes serán posibles (6 total - 1 último - 1 opuesto).
+        
         pesos_posibles = [estados_caoticos[eje] for eje in ejes_posibles]
 
-        # 2. Elegir Eje (usando LCG + pesos caóticos)
+        # 3. Elegir Eje (usando LCG + pesos caóticos)
         eje_actual = nuestro_choice_con_pesos(generador_lcg, ejes_posibles, pesos_posibles)
         
-        # 3. Elegir Modificador (usando LCG)
+        # 4. Elegir Modificador (usando LCG)
         modificador_actual = choicer(generador_lcg, modificadores)
 
-        # 4. Guardar y actualizar memoria
+        # 5. Guardar y actualizar memoria
         scramble.append(eje_actual + modificador_actual)
         ultimo_eje_movido = eje_actual
         
-        # 5. Iterar el sistema caótico (ahora solo itera 3 estados)
+        # 6. Iterar el sistema caótico (itera los 6 estados)
         for eje in estados_caoticos:
             estados_caoticos[eje] = logistic_map_iterate(estados_caoticos[eje], r)
             

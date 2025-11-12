@@ -32,3 +32,6 @@ cffi==2.0.0
 future==1.0.0
 kociemba==1.2.1
 pycparser==2.23
+pandas==2.3.3
+pytz==2025.2
+tzdata==2025.2
